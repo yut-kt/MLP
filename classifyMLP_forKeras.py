@@ -27,7 +27,7 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('-t', '--svm_test_file', help='テストデータ', required=True)
     parser.add_argument('-m', '--model', help='モデルデータ', required=True)
-    parser.add_argument('output', type=str, default='output', help='結果出力ファイル')
+    parser.add_argument('-o', '--output_file', default='output', help='結果出力ファイル')
     args = parser.parse_args()
-    
+
     main()
