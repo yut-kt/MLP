@@ -1,52 +1,33 @@
 # -*- coding: utf-8 -*-
 
-import argparse
-from sklearn.datasets import load_svmlight_files
+from argparse import ArgumentParser
 
-# TensorFlow from Keras
-from keras.models import model_from_json
+from sklearn.datasets import load_svmlight_files
+from keras.models import load_model
 
 # 設定したサンプル数ごとに勾配を更新
 b_size = 256
 
+
 def main():
+    model = load_model(args.model, compile=False)
 
-    # コマンドライン引数の読み込み
-    args = readArgs()
-
-    # モデルの読み込み
-    model = model_from_json(open(args.model + '.json', 'r').read())
-
-    # データの読み込み
-    test, testTag = load_svmlight_files([args.test], n_features=model.input_shape[-1])
+    test, testTag = load_svmlight_files([args.svm_test_file], n_features=model.input_shape[-1])
     test = test.toarray()
-
-    # モデルに学習したパラメータを読み込む
-    model.load_weights(args.model + '.hdf5')
 
     kekka = model.predict_classes(test, batch_size=b_size, verbose=1)
     # kekka = model.predict_proba(test, batch_size=b_size, verbose=1)
 
-    fp = open(args.output, 'w')
-
-    for i in kekka:
-        fp.write("{}\n".format(str(i[0])))
-
-    fp.close()
-
-
-# コマンドライン引数の処理関数
-# 引数: なし
-# 返値: 処理した引数の辞書
-def readArgs():
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument('test', type=str, help='テストデータ')
-    parser.add_argument('model', type=str, default='model', help='モデルデータ')
-    parser.add_argument('output', type=str, default='output', help='結果出力ファイル')
-
-    return parser.parse_args()
+    with open(args.output, 'w') as p:
+        for i in kekka:
+            p.write("{}\n".format(str(i[0])))
 
 
 if __name__ == '__main__':
+    parser = ArgumentParser()
+    parser.add_argument('-t', '--svm_test_file', help='テストデータ', required=True)
+    parser.add_argument('-m', '--model', help='モデルデータ', required=True)
+    parser.add_argument('output', type=str, default='output', help='結果出力ファイル')
+    args = parser.parse_args()
+    
     main()

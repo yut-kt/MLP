@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 
-import argparse
+from argparse import ArgumentParser
+
 from sklearn.datasets import load_svmlight_files
-
 from keras.models import Sequential
-from keras.layers import Dense, Dropout, Activation
-
+from keras.layers import Dense, Dropout
 import keras.backend as K
 
 
 def main():
-    train, trainTag = load_svmlight_files([args.train])
+    train, trainTag = load_svmlight_files([args.svm_train_file])
     train = train.toarray()
 
     model = create_model(train.shape[-1])
@@ -70,7 +69,7 @@ def create_model(max_features):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='深層学習を行うプログラム')
+    parser = ArgumentParser(description='深層学習を行うプログラム')
     parser.add_argument('-t', '--svm_train_file', help='学習データ', required=True)
     parser.add_argument('-m', '--model_name', default='model', help='モデル名')
     args = parser.parse_args()
