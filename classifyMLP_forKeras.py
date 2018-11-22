@@ -18,7 +18,7 @@ def main():
     kekka = model.predict_classes(test, batch_size=b_size, verbose=1)
     # kekka = model.predict_proba(test, batch_size=b_size, verbose=1)
 
-    with open(args.output, 'w') as p:
+    with open(args.output_file, 'w') as p:
         for i in kekka:
             p.write("{}\n".format(str(i[0])))
 
